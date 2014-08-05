@@ -36,11 +36,21 @@ var app = {
       app.handleSubmit(message);
     });
     $('#main').on('click','.username',function(){
-      console.log('hello');
-      app.addFriend(this.text);
-      for(var i = 0; i < $('#chats li').length; i++){
-        if($('#chats li').children()[i].text === this.text){
-          $($('#chats li')[i]).css('font-weight','bold');
+      // console.log('hello');
+      var username = $(location).attr('href').split('=')[1];
+      if(app.friendNet[username].indexOf(this.text) === -1){
+        app.addFriend(this.text);
+        for(var i = 0; i < $('#chats li').length; i++){
+          if($('#chats li').children()[i].text === this.text){
+            $($('#chats li')[i]).css('font-weight','bold');
+          }
+        }
+      }else{
+        app.removeFriend(this.text);
+        for(var i = 0; i < $('#chats li').length; i++){
+          if($('#chats li').children()[i].text === this.text){
+            $($('#chats li')[i].css('font-weight','bold'));
+          }
         }
       }
     });
@@ -89,13 +99,21 @@ var app = {
   },
 
   addFriend: function(friendName){
-    var user = $(location).attr('href').split('=')[1];
+    // var username = $(location).attr('href').split('=')[1];
     // console.log(this);
-    if(this.friendNet[user] === undefined){
-      this.friendNet[user] = [];
-      this.friendNet[user].push(friendName);
+    if(this.friendNet[username] === undefined){
+      this.friendNet[username] = [];
+      this.friendNet[username].push(friendName);
     } else {
-      this.friendNet[user].push(friendName);
+      this.friendNet[username].push(friendName);
+    }
+  },
+
+  removeFriend: function(friendName){
+    // var username = $(location).attr('href').split('=')[1];
+    var index = this.friendNet[username].indexOf(friendName);
+    if(index > -1){
+      this.friendNet[username].splice(index,1);
     }
   },
 
@@ -108,6 +126,7 @@ $(document).ready(function(){
   app.init();
   app.fetch();
   app.addRoom('default');
+  var username = $(location).attr('href').split('=')[1];
   // $('.username').on('click', function(){
   //   console.log('yo');
   //   app.addFriend(this.text);
