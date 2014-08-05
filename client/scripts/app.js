@@ -38,7 +38,7 @@ var app = {
     $('#main').on('click','.username',function(){
       // console.log('hello');
       var username = $(location).attr('href').split('=')[1];
-      if(app.friendNet[username].indexOf(this.text) === -1){
+      if((app.friendNet[username]===undefined) || (app.friendNet[username].indexOf(this.text) === -1)){
         app.addFriend(this.text);
         for(var i = 0; i < $('#chats li').length; i++){
           if($('#chats li').children()[i].text === this.text){
@@ -49,7 +49,7 @@ var app = {
         app.removeFriend(this.text);
         for(var i = 0; i < $('#chats li').length; i++){
           if($('#chats li').children()[i].text === this.text){
-            $($('#chats li')[i].css('font-weight','bold'));
+            $($('#chats li')[i]).css('font-weight','normal');
           }
         }
       }
@@ -99,7 +99,7 @@ var app = {
   },
 
   addFriend: function(friendName){
-    // var username = $(location).attr('href').split('=')[1];
+    var username = $(location).attr('href').split('=')[1];
     // console.log(this);
     if(this.friendNet[username] === undefined){
       this.friendNet[username] = [];
@@ -110,7 +110,7 @@ var app = {
   },
 
   removeFriend: function(friendName){
-    // var username = $(location).attr('href').split('=')[1];
+    var username = $(location).attr('href').split('=')[1];
     var index = this.friendNet[username].indexOf(friendName);
     if(index > -1){
       this.friendNet[username].splice(index,1);
@@ -126,7 +126,7 @@ $(document).ready(function(){
   app.init();
   app.fetch();
   app.addRoom('default');
-  var username = $(location).attr('href').split('=')[1];
+  // var username = $(location).attr('href').split('=')[1];
   // $('.username').on('click', function(){
   //   console.log('yo');
   //   app.addFriend(this.text);
