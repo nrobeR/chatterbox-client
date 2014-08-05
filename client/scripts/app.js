@@ -2,6 +2,10 @@
 
 var apiUrl = 'https://api.parse.com/1/classes/chatterbox';
 
+var encodeHtml = function(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quote;');
+};
+
 var app = {
   friendNet: {
   },
@@ -10,14 +14,21 @@ var app = {
     // url: 'https://api.parse.com/1/classes/chatterbox',
       url: apiUrl,
       type: 'GET',
-      data: {order: "-createdAt"},
+      data: {
+        order: "-createdAt"
+        // where: {
+        //   "username": {'$nin':['a']}
+        // }
+        //method: encodeURI()
+      },
       dataType: 'JSON',
       success: function(data){
         // console.log(data.results.length);
-        console.log(data.results);
-        var arrLength = data.results.length;
+        //var arrLength = data.results.length;
         for( var i = 0; i < 10; i++ ){
-          $('#chats').append('<li><a class=username>'+ data.results[i].username + '</a>'+ ": " + data.results[i].text +
+          var userText = encodeHtml(data.results[i].text);
+          console.log(userText);
+          $('#chats').append('<li><a class=username>'+ data.results[i].username + '</a>'+ ": " + userText +
             " @room " + data.results[i].roomname + '</li>');
           var rname = data.results[i].roomname;
           app.addRoom(rname);
@@ -45,7 +56,7 @@ var app = {
             $($('#chats li')[i]).css('font-weight','bold');
           }
         }
-      }else{
+      } else{
         app.removeFriend(this.text);
         for(var i = 0; i < $('#chats li').length; i++){
           if($('#chats li').children()[i].text === this.text){
